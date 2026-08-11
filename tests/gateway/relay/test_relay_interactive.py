@@ -257,8 +257,6 @@ async def test_processing_lifecycle_reacts_eyes_then_check():
     assert all(r["message_id"] == "m42" and r["chat_id"] == "ch1" for r in reacts)
 
 
-
-
 # ── fanned-out prompt answers (one press, many gateways) ─────────────────
 #
 # The connector delivers a passthrough forward (a Discord button press) to
@@ -281,9 +279,7 @@ async def test_sibling_gateway_ignores_another_instances_prompt_answer(monkeypat
         "tools.clarify_gateway.resolve_gateway_clarify",
         lambda cid, resp: resolved.append((cid, resp)) or True,
     )
-    monkeypatch.setattr(
-        "tools.clarify_gateway.mark_awaiting_text", lambda cid: None
-    )
+    monkeypatch.setattr("tools.clarify_gateway.mark_awaiting_text", lambda cid: None)
 
     event = _event({"prompt_id": prompt_id, "option_id": "c1"})
     # Consumed (True) so the "/c1"-shaped text is never dispatched as chat --
