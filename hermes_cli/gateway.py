@@ -4830,19 +4830,16 @@ def _guard_per_profile_gateways_disallowed(force: bool = False) -> None:
         if not isinstance(gw, dict):
             gw = {}
 
-        # multiplex_profiles=true blocks per-profile gateways by default.
+        # If multiplex_profiles is NOT truthy, the block doesn't apply.
         multiplex = gw.get("multiplex_profiles")
         allow = gw.get("allow_per_profile_gateways")
 
-        if (
-           multiplex is True
-           and allow is not True
-            ):
-            pass  # multiplex is on -- block below
+        if not multiplex:
+            return
 
-        # No multiplex flag: check the legacy flag.
+        # multiplex_profiles is on -- gate on allow_per_profile_gateways.
         if isinstance(allow, bool) and allow:
-            return  # explicitly allowed
+            return    # explicitly allowed
     except Exception:
         pass  # default to deny
 
